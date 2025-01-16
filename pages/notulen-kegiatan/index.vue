@@ -8,12 +8,12 @@ const dialogSave = ref();
 const tableRef = ref();
 
 const form = ref({
-    tanggal: "", // guruid
-    title: "", // guruid
-    catatan: "", // guruid
-    file: null, // guruid
-    gambar_1: null, // guruid
-    gambar_2: null, // guruid
+    tanggal: "", // dosenid
+    title: "", // dosenid
+    catatan: "", // dosenid
+    file: null, // dosenid
+    gambar_1: null, // dosenid
+    gambar_2: null, // dosenid
 });
 
 
@@ -135,7 +135,7 @@ onMounted(() => {
         <template #actions="{ item, remove }">
           <div class="d-flex gap-1">
             <IconBtn
-              label="Tambah Guru"
+              label="Tambah Dosen"
               size="small"
               @click="
                 () => {

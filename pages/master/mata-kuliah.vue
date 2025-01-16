@@ -30,7 +30,7 @@ useApi("master/semester/all/1").then(({ data }) => {
 
 onMounted(() => {
   const { user } = useAuthStore();
-  useApi(`level/master-mata-pelajaran/${user.role_id}`).then(({ data }) => {
+  useApi(`level/master-mata-kuliah/${user.role_id}`).then(({ data }) => {
     if(data == 0){
       navigateTo(`/not-authorized`);
     }
@@ -43,9 +43,9 @@ onMounted(() => {
     v-if="tableRef"
     v-slot="{ formData, validationErrors, isEditing }"
     ref="dialogSave"
-    path="master/mata-pelajaran"
-    title="Tambah Mata Pelajaran"
-    edit-title="Edit Mata Pelajaran"
+    path="master/mata-kuliah"
+    title="Tambah Mata Kuliah"
+    edit-title="Edit Mata Kuliah"
     :default-form="form"
     :refresh-callback="tableRef.refresh"
   >
@@ -159,8 +159,8 @@ onMounted(() => {
     <VCol cols="12">
       <AppTable
         ref="tableRef"
-        title="Data Mata Pelajaran"
-        path="master/mata-pelajaran"
+        title="Data Mata Kuliah"
+        path="master/mata-kuliah"
         :with-actions="true"
         :headers="[
           {
@@ -207,8 +207,8 @@ onMounted(() => {
               size="small"
               @click="
                 confirmDialog.show({
-                  title: 'Hapus Mata Pelajaran',
-                  message: `Anda yakin ingin menghapus Mata Pelajaran ${
+                  title: 'Hapus Mata Kuliah',
+                  message: `Anda yakin ingin menghapus Mata Kuliah ${
                     (item as any).name
                   }?`,
                   onConfirm: () => remove((item as any).id),

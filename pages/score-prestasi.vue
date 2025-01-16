@@ -8,7 +8,7 @@ const dialogSave = ref();
 const tableRef = ref();
 
 const form = ref({
-  siswa_id: null, // guruid
+  mahasiswa_id: null, // dosenid
   tanggal: "",
   score: 0,
   catatan: "",
@@ -17,7 +17,7 @@ const form = ref({
 const studentList = ref([]);
 
 const getAllStudent = async () => {
-  useApi("siswa/all").then(({ data }) => {
+  useApi("mahasiswa/all").then(({ data }) => {
     studentList.value = data;
   });
 };
@@ -39,8 +39,8 @@ onMounted(() => {
     v-slot="{ formData, validationErrors, isEditing }"
     ref="dialogSave"
     path="score-prestasi"
-    title="Tambah Score Prestasi Siswa"
-    edit-title="Edit Score Prestasi Siswa"
+    title="Tambah Score Prestasi Mahasiswa"
+    edit-title="Edit Score Prestasi Mahasiswa"
     :default-form="form"
     :request-form="form"
     :refresh-callback="tableRef.refresh"
@@ -48,10 +48,10 @@ onMounted(() => {
   >
     <VCol cols="12">
       <VAutocomplete
-        v-model="formData.siswa_id"
-        label="Siswa"
-        :error-messages="validationErrors.siswa_id"
-        placeholder="Pilih Siswa"
+        v-model="formData.mahasiswa_id"
+        label="Mahasiswa"
+        :error-messages="validationErrors.mahasiswa_id"
+        placeholder="Pilih Mahasiswa"
         :items="studentList"
         item-title="text"
         item-value="id"
@@ -110,13 +110,13 @@ onMounted(() => {
     <VCol cols="12">
       <AppTable
         ref="tableRef"
-        title="Data Score Prestasi Siswa"
+        title="Data Score Prestasi Mahasiswa"
         path="score-prestasi"
         :with-actions="true"
         :headers="[
           {
-            title: 'Siswa',
-            key: 'siswa_name',
+            title: 'Mahasiswa',
+            key: 'mahasiswa_name',
             sortable: false,
           },
           {

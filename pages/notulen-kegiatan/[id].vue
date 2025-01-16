@@ -6,13 +6,13 @@ const dialogSave = ref();
 
 const tableRef = ref();
 
-const guru = ref([]);
+const dosen = ref([]);
 const notulenId = computed(() => route.params.id);
 const url = "notulen-kegiatan-detail";
 
 const form = ref({
-  notulen_kegiatan_id: notulenId.value, // guruid
-  guru_id: "", // guruid
+  notulen_kegiatan_id: notulenId.value, // dosenid
+  dosen_id: "", // dosenid
 });
 
 onMounted(() => {
@@ -25,8 +25,8 @@ onMounted(() => {
 
   console.log("notulenId", notulenId.value);
   if (user.role_id !== 1) return navigateTo(`/not-authorized`);
-  useApi("master/guru/all").then(({ data }) => {
-    guru.value = data;
+  useApi("master/dosen/all").then(({ data }) => {
+    dosen.value = data;
   });
 });
 </script>
@@ -37,8 +37,8 @@ onMounted(() => {
     v-slot="{ formData, validationErrors, isEditing }"
     ref="dialogSave"
     :path="url"
-    title="Tambah Absen Notulen Kegiatan Guru"
-    edit-title="Edit Absen Notulen Kegiatan Guru"
+    title="Tambah Absen Notulen Kegiatan Dosen"
+    edit-title="Edit Absen Notulen Kegiatan Dosen"
     :default-form="form"
     :request-form="form"
     :refresh-callback="tableRef.refresh"
@@ -46,11 +46,11 @@ onMounted(() => {
   >
     <VCol cols="12">
       <VAutocomplete
-        v-model="formData.guru_id"
-        label="Guru"
-        :error-messages="validationErrors.guru_id"
-        placeholder="Pilih Guru"
-        :items="guru"
+        v-model="formData.dosen_id"
+        label="Dosen"
+        :error-messages="validationErrors.dosen_id"
+        placeholder="Pilih Dosen"
+        :items="dosen"
         item-title="text"
         item-value="id"
         required
@@ -98,8 +98,8 @@ onMounted(() => {
             sortable: false,
           },
           {
-            title: 'Guru',
-            key: 'guru_name',
+            title: 'Dosen',
+            key: 'dosen_name',
             sortable: false,
           },
         ]"

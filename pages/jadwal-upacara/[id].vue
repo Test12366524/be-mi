@@ -10,14 +10,14 @@ const route = useRoute();
 const jadwalUpacaraId = computed(() => route.params.id);
 
 const form = ref({
-  jadwal_upacara_id: jadwalUpacaraId.value, // guruid
-  guru_id: null,
+  jadwal_upacara_id: jadwalUpacaraId.value, // dosenid
+  dosen_id: null,
 });
 
 const teacherList = ref([]);
 
 const getAllTeacher = async () => {
-  useApi("master/guru/all").then(({ data }) => {
+  useApi("master/dosen/all").then(({ data }) => {
     teacherList.value = data;
   });
 };
@@ -46,10 +46,10 @@ onMounted(() => {
   >
     <VCol cols="12">
       <VAutocomplete
-        v-model="formData.guru_id"
-        label="Guru"
-        :error-messages="validationErrors.guru_id"
-        placeholder="Pilih Guru"
+        v-model="formData.dosen_id"
+        label="Dosen"
+        :error-messages="validationErrors.dosen_id"
+        placeholder="Pilih Dosen"
         :items="teacherList"
         item-title="text"
         item-value="id"
@@ -83,7 +83,7 @@ onMounted(() => {
     <VCol cols="12" v-if="jadwalUpacaraId">
       <AppTable
         ref="tableRef"
-        title="Daftar Hadir Guru"
+        title="Daftar Hadir Dosen"
         path="jadwal-upacara-detail"
         :jadwal_upacara_id="jadwalUpacaraId"
         :with-actions="true"
@@ -99,8 +99,8 @@ onMounted(() => {
             sortable: false,
           },
           {
-            title: 'Guru',
-            key: 'guru_name',
+            title: 'Dosen',
+            key: 'dosen_name',
             sortable: false,
           },
         ]"

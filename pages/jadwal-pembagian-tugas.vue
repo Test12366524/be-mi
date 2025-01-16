@@ -6,17 +6,17 @@ const dialogSave = ref();
 const tableRef = ref();
 
 const form = ref({
-  guru_id: null, // guruid
+  dosen_id: null, // dosenid
   tugas: "",
   description: "",
   tanggal: null,
 });
 
 const teacherList = ref([]);
-const mataPelajaranList = ref([]);
+const mataKuliahList = ref([]);
 
 const getAllTeacher = async () => {
-  useApi("master/guru/all").then(({ data }) => {
+  useApi("master/dosen/all").then(({ data }) => {
     teacherList.value = data;
   });
 };
@@ -37,7 +37,7 @@ onMounted(() => {
     v-if="tableRef"
     v-slot="{ formData, validationErrors, isDetail }"
     ref="dialogSave"
-    path="guru-tugas"
+    path="dosen-tugas"
     title="Tambah Jadwal Pembagian Tugas"
     edit-title="Edit Jadwal Pembagian Tugas"
     :default-form="form"
@@ -47,10 +47,10 @@ onMounted(() => {
   >
     <VCol cols="12">
       <VAutocomplete
-        v-model="formData.guru_id"
-        label="Guru"
-        :error-messages="validationErrors.guru_id"
-        placeholder="Pilih Guru"
+        v-model="formData.dosen_id"
+        label="Dosen"
+        :error-messages="validationErrors.dosen_id"
+        placeholder="Pilih Dosen"
         :items="teacherList"
         item-title="text"
         item-value="id"
@@ -108,12 +108,12 @@ onMounted(() => {
       <AppTable
         ref="tableRef"
         title="Data Jadwal Pembagian Tugas"
-        path="guru-tugas"
+        path="dosen-tugas"
         :with-actions="true"
         :headers="[
           {
-            title: 'Guru',
-            key: 'guru_name',
+            title: 'Dosen',
+            key: 'dosen_name',
             sortable: false,
           },
           {

@@ -3,8 +3,8 @@ export function useAppTable(conf: {
   limit?: number;
   kelas_id?: string | number | null;
   gender?: string | number | null;
-  guru_id?: string | number | null;
-  mata_pelajaran_id?: string | number | null;
+  dosen_id?: string | number | null;
+  mata_kuliah_id?: string | number | null;
   periode_id?: string | number | null;
   semester_id?: string | number | null;
   notulen_kegiatan_id?: string | number | null;
@@ -18,8 +18,8 @@ export function useAppTable(conf: {
   const items = ref();
   const kelas_id = ref(conf.kelas_id || "");
   const gender = ref(conf.gender || "");
-  const guru_id = ref(conf.guru_id || "");
-  const mata_pelajaran_id = ref(conf.mata_pelajaran_id || "");
+  const dosen_id = ref(conf.dosen_id || "");
+  const mata_kuliah_id = ref(conf.mata_kuliah_id || "");
   const periode_id = ref(conf.periode_id || "");
   const semester_id = ref(conf.semester_id || "");
   const notulen_kegiatan_id = ref(conf.notulen_kegiatan_id || "");
@@ -60,8 +60,8 @@ export function useAppTable(conf: {
       params.kelas_id = kelas_id.value;
 
     // Only add kelas_id if it has a valid value
-    if (guru_id.value && guru_id.value !== "" && Number(guru_id.value) > 0)
-      params.guru_id = guru_id.value;
+    if (dosen_id.value && dosen_id.value !== "" && Number(dosen_id.value) > 0)
+      params.dosen_id = dosen_id.value;
 
     // Only add kelas_id if it has a valid value
     if (
@@ -81,11 +81,11 @@ export function useAppTable(conf: {
 
     // Only add kelas_id if it has a valid value
     if (
-      mata_pelajaran_id.value &&
-      mata_pelajaran_id.value !== "" &&
-      Number(mata_pelajaran_id.value) > 0
+      mata_kuliah_id.value &&
+      mata_kuliah_id.value !== "" &&
+      Number(mata_kuliah_id.value) > 0
     )
-      params.mata_pelajaran_id = mata_pelajaran_id.value;
+      params.mata_kuliah_id = mata_kuliah_id.value;
 
     // Only add kelas_id if it has a valid value
     if (
@@ -125,8 +125,8 @@ export function useAppTable(conf: {
     removeRowBy,
     kelas_id,
     gender,
-    guru_id,
-    mata_pelajaran_id,
+    dosen_id,
+    mata_kuliah_id,
     periode_id,
     semester_id,
     notulen_kegiatan_id,

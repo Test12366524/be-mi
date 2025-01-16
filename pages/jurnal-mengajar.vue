@@ -19,7 +19,7 @@ const previewPhoto = ref(null);
 const teacherList = ref([]);
 
 const getAllTeacher = async () => {
-  useApi("user/all-guru").then(({ data }) => {
+  useApi("user/all-dosen").then(({ data }) => {
     console.log(data);
     teacherList.value = data;
   });
@@ -74,9 +74,9 @@ onMounted(() => {
         <VCol cols="12" md="12">
           <VAutocomplete
             v-model="formData.user_id"
-            label="Guru"
+            label="Dosen"
             :error-messages="validationErrors.user_id"
-            placeholder="Pilih Guru"
+            placeholder="Pilih Dosen"
             :items="teacherList"
             item-title="text"
             item-value="id"
@@ -159,7 +159,7 @@ onMounted(() => {
         :with-actions="true"
         :headers="[
           {
-            title: 'Guru',
+            title: 'Dosen',
             key: 'user_name',
             sortable: false,
           },

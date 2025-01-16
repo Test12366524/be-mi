@@ -5,17 +5,17 @@ const { confirmDialog } = useCommonStore();
 
 const dialogSave = ref();
 const tableRef = ref();
-const siswa = ref();
-const guru = ref();
+const mahasiswa = ref();
+const dosen = ref();
 const semester = ref();
 const filter_semester = ref();
 const periode = ref();
 const filter_periode = ref();
-const filter_mata_pelajaran = ref();
-const mata_pelajaran = ref();
+const filter_mata_kuliah = ref();
+const mata_kuliah = ref();
 const kelas = ref();
 const bulkingDialog = ref();
-const siswaTableRef = ref();
+const mahasiswaTableRef = ref();
 
 const userStore = useUserStore();
 const waliKelasData = computed(() => userStore.waliKelasData);
@@ -23,11 +23,11 @@ const { user } = useAuthStore();
 
 const form = ref({
   kelas_id: null,
-  guru_id: "",
-  mata_pelajaran_id: "",
+  dosen_id: "",
+  mata_kuliah_id: "",
   semester_id: "",
   periode_id: "",
-  siswa_id: "",
+  mahasiswa_id: "",
   kehadiran: "",
   tugas: "",
   uts: "",
@@ -36,12 +36,12 @@ const form = ref({
   predikat: "",
 });
 
-useApi("siswa/all").then(({ data }) => {
-  siswa.value = data;
+useApi("mahasiswa/all").then(({ data }) => {
+  mahasiswa.value = data;
 });
 
-useApi("master/mata-pelajaran/all").then(({ data }) => {
-  filter_mata_pelajaran.value = data;
+useApi("master/mata-kuliah/all").then(({ data }) => {
+  filter_mata_kuliah.value = data;
 });
 
 useApi("master/semester/all/1").then(({ data }) => {
@@ -67,12 +67,12 @@ useApi("master/periode/all/0").then(({ data }) => {
 const role_id = ref();
 const status_action = ref();
 
-const mata_pelajaran_id = ref<number | null>(null);
-const guru_id = ref<number | null>(null);
+const mata_kuliah_id = ref<number | null>(null);
+const dosen_id = ref<number | null>(null);
 const kelas_id = ref<number | null>(null);
 const semester_id = ref<number | null>(null);
 const periode_id = ref<number | null>(null);
-const siswaByClass = ref([]);
+const mahasiswaByClass = ref([]);
 
 const pagination = reactive({
   totalItem: 1,
@@ -88,11 +88,11 @@ const params = reactive({
 
 const singleDataForm = ref({
   kelas_id: null,
-  guru_id: "",
-  mata_pelajaran_id: "",
+  dosen_id: "",
+  mata_kuliah_id: "",
   semester_id: "",
   periode_id: "",
-  siswa_id: "",
+  mahasiswa_id: "",
   kehadiran: "",
   tugas: "",
   uts: "",
@@ -112,31 +112,31 @@ const headers = [
   { title: "Predikat", key: "predikat", sortable: false },
 ];
 
-const getMataKuliahByClass = (guru_id: number) => {
-  useApi(`master/mata-pelajaran/all/${guru_id}`).then(({ data }) => {
-    mata_pelajaran.value = data;
+const getMataKuliahByClass = (dosen_id: number) => {
+  useApi(`master/mata-kuliah/all/${dosen_id}`).then(({ data }) => {
+    mata_kuliah.value = data;
   });
 };
 
-const getSiswaByClass = (classId) => {
+const getMahasiswaByClass = (classId) => {
   const getParams = {
     ...params,
     kelas_id: form.kelas_id || classId,
   };
 
-  useApi(`siswa${objectToParams(getParams)}`).then(({ data }) => {
+  useApi(`mahasiswa${objectToParams(getParams)}`).then(({ data }) => {
     console.log(data);
     pagination.pageTotal = data.pageTotal;
     pagination.page = Number.parseInt(data.currentPage);
     pagination.totalItem = data.total;
-    siswaByClass.value = data.items.map((item) => {
+    mahasiswaByClass.value = data.items.map((item) => {
       return {
         ...item,
         kelas_id: form.kelas_id,
-        guru_id: form.guru_id,
-        mata_pelajaran_id: form.mata_pelajaran_id,
+        dosen_id: form.dosen_id,
+        mata_kuliah_id: form.mata_kuliah_id,
         semester_id: form.semester_id,
-        siswa_id: item.id,
+        mahasiswa_id: item.id,
         kehadiran: "0",
         tugas: "0",
         uts: "0",
@@ -174,15 +174,15 @@ const getPredikat = (item) => {
 };
 
 const handleInsertBulk = async () => {
-  console.log("handleInsertBulk", siswaByClass.value);
+  console.log("handleInsertBulk", mahasiswaByClass.value);
 
-  const data = siswaByClass.value.map((item) => {
+  const data = mahasiswaByClass.value.map((item) => {
     return {
       kelas_id: form.value.kelas_id,
-      guru_id: form.value.guru_id,
-      mata_pelajaran_id: form.value.mata_pelajaran_id,
+      dosen_id: form.value.dosen_id,
+      mata_kuliah_id: form.value.mata_kuliah_id,
       semester_id: form.value.semester_id,
-      siswa_id: item.id,
+      mahasiswa_id: item.id,
       kehadiran: item.kehadiran,
       tugas: item.tugas,
       uts: item.uts,
@@ -212,7 +212,7 @@ const handleInsertBulk = async () => {
 
 const isDataNotValid = computed(() => {
   return (
-    !form.value.kelas_id || !form.value.guru_id || !form.value.mata_pelajaran_id
+    !form.value.kelas_id || !form.value.dosen_id || !form.value.mata_kuliah_id
   );
 });
 
@@ -233,13 +233,13 @@ onMounted(() => {
 
   if (user.role_id == 1) {
     status_action.value = true;
-    useApi("master/guru/all").then(({ data }) => {
-      guru.value = data;
+    useApi("master/dosen/all").then(({ data }) => {
+      dosen.value = data;
     });
   } else if (user.role_id == 2) {
     status_action.value = true;
-    useApi(`master/guru/all/${user.id}`).then(({ data }) => {
-      guru.value = data;
+    useApi(`master/dosen/all/${user.id}`).then(({ data }) => {
+      dosen.value = data;
     });
   } else {
     status_action.value = false;
@@ -287,12 +287,12 @@ onMounted(() => {
     <!--
       <VCol cols="12" md="3">
       <VAutocomplete
-      v-model="formData.guru_id"
-      label="Guru"
+      v-model="formData.dosen_id"
+      label="Dosen"
       density="compact"
-      :error-messages="validationErrors.guru_id"
-      placeholder="Pilih Guru"
-      :items="guru"
+      :error-messages="validationErrors.dosen_id"
+      placeholder="Pilih Dosen"
+      :items="dosen"
       item-title="text"
       item-value="id"
       required
@@ -304,12 +304,12 @@ onMounted(() => {
     -->
     <VCol cols="12" md="4">
       <VAutocomplete
-        v-model="formData.mata_pelajaran_id"
-        label="Mata Pelajaran"
+        v-model="formData.mata_kuliah_id"
+        label="Mata Kuliah"
         density="compact"
-        :error-messages="validationErrors.mata_pelajaran_id"
-        placeholder="Pilih Mata Pelajaran"
-        :items="mata_pelajaran"
+        :error-messages="validationErrors.mata_kuliah_id"
+        placeholder="Pilih Mata Kuliah"
+        :items="mata_kuliah"
         item-title="text"
         item-value="id"
         required
@@ -355,12 +355,12 @@ onMounted(() => {
 
     <VCol cols="12" md="12">
       <VAutocomplete
-        v-model="formData.siswa_id"
-        label="Siswa"
+        v-model="formData.mahasiswa_id"
+        label="Mahasiswa"
         density="compact"
-        :error-messages="validationErrors.siswa_id"
-        placeholder="Pilih Siswa"
-        :items="siswa"
+        :error-messages="validationErrors.mahasiswa_id"
+        placeholder="Pilih Mahasiswa"
+        :items="mahasiswa"
         item-title="text"
         item-value="id"
         required
@@ -421,7 +421,7 @@ onMounted(() => {
       clear-icon="ri-close-line"
       @update:model-value="
       (kelas_id) => {
-      getSiswaByClass(kelas_id);
+      getMahasiswaByClass(kelas_id);
       form.kelas_id = kelas_id;
       }
       "
@@ -431,21 +431,21 @@ onMounted(() => {
     <!--
       <VCol cols="12" md="3">
       <VAutocomplete
-      v-model="formData.guru_id"
-      label="Guru"
+      v-model="formData.dosen_id"
+      label="Dosen"
       density="compact"
-      :error-messages="validationErrors.guru_id"
-      placeholder="Pilih Guru"
-      :items="guru"
+      :error-messages="validationErrors.dosen_id"
+      placeholder="Pilih Dosen"
+      :items="dosen"
       item-title="text"
       item-value="id"
       required
       clearable
       clear-icon="ri-close-line"
       @update:model-value="
-      (guru_id) => {
-      form.guru_id = guru_id;
-      getMataKuliahByClass(guru_id);
+      (dosen_id) => {
+      form.dosen_id = dosen_id;
+      getMataKuliahByClass(dosen_id);
       }
       "
       />
@@ -453,20 +453,20 @@ onMounted(() => {
     -->
     <VCol cols="12" md="2">
       <VAutocomplete
-        v-model="formData.mata_pelajaran_id"
-        label="Mata Pelajaran"
+        v-model="formData.mata_kuliah_id"
+        label="Mata Kuliah"
         density="compact"
-        :error-messages="validationErrors.mata_pelajaran_id"
-        placeholder="Pilih Mata Pelajaran"
-        :items="mata_pelajaran"
+        :error-messages="validationErrors.mata_kuliah_id"
+        placeholder="Pilih Mata Kuliah"
+        :items="mata_kuliah"
         item-title="text"
         item-value="id"
         required
         clearable
         clear-icon="ri-close-line"
         @update:model-value="
-          (mata_pelajaran_id) => {
-            form.mata_pelajaran_id = mata_pelajaran_id;
+          (mata_kuliah_id) => {
+            form.mata_kuliah_id = mata_kuliah_id;
           }
         "
       />
@@ -513,9 +513,9 @@ onMounted(() => {
     </VCol>
     <VCol cols="12" md="12">
       <VDataTable
-        ref="siswaTableRef"
+        ref="mahasiswaTableRef"
         :headers="headers"
-        :items="siswaByClass"
+        :items="mahasiswaByClass"
         :items-per-page="10"
         :page-count="pagination.pageTotal"
         class="text-no-wrap"
@@ -565,7 +565,7 @@ onMounted(() => {
         <template #bottom>
           <VDivider />
           <div
-            v-if="siswaByClass.length > 0"
+            v-if="mahasiswaByClass.length > 0"
             class="d-flex justify-end flex-wrap gap-x-6 px-2 py-1"
           >
             <div
@@ -614,7 +614,7 @@ onMounted(() => {
                   @click="
                   () => {
                   bulkingDialog.show();
-                  siswaByClass = [];
+                  mahasiswaByClass = [];
                   }
                   "
                   >
@@ -646,11 +646,11 @@ onMounted(() => {
                   </VCol>
                   <VCol cols="12" sm="6" md="3">
                   <VAutocomplete
-                  v-model="guru_id"
-                  label="Guru"
+                  v-model="dosen_id"
+                  label="Dosen"
                   density="compact"
-                  placeholder="Pilih Guru"
-                  :items="guru"
+                  placeholder="Pilih Dosen"
+                  :items="dosen"
                   item-title="text"
                   item-value="id"
                   required
@@ -661,11 +661,11 @@ onMounted(() => {
                 -->
                 <VCol cols="12" sm="6" md="4">
                   <VAutocomplete
-                    v-model="mata_pelajaran_id"
-                    label="Mata Pelajaran"
+                    v-model="mata_kuliah_id"
+                    label="Mata Kuliah"
                     density="compact"
-                    placeholder="Pilih Mata Pelajaran"
-                    :items="filter_mata_pelajaran"
+                    placeholder="Pilih Mata Kuliah"
+                    :items="filter_mata_kuliah"
                     item-title="text"
                     item-value="id"
                     required
@@ -715,8 +715,8 @@ onMounted(() => {
         path="nilai/wali-kelas"
         :with-actions="status_action"
         :kelas_id="kelas_id"
-        :guru_id="guru_id"
-        :mata_pelajaran_id="mata_pelajaran_id"
+        :dosen_id="dosen_id"
+        :mata_kuliah_id="mata_kuliah_id"
         :semester_id="semester_id"
         :periode_id="periode_id"
         :headers="[
@@ -726,23 +726,23 @@ onMounted(() => {
             sortable: false,
           },
           {
-            title: 'Guru',
-            key: 'guru_name',
+            title: 'Dosen',
+            key: 'dosen_name',
             sortable: false,
           },
           {
-            title: 'Mata Pelajaran',
-            key: 'mata_pelajaran_name',
+            title: 'Mata Kuliah',
+            key: 'mata_kuliah_name',
             sortable: false,
           },
           {
             title: 'NISN',
-            key: 'siswa_nisn',
+            key: 'mahasiswa_nisn',
             sortable: false,
           },
           {
             title: 'Nama',
-            key: 'siswa_name',
+            key: 'mahasiswa_name',
             sortable: false,
           },
           {

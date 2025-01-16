@@ -18,7 +18,7 @@ const isAttendanceIn = ref(true);
 const teacherList = ref([]);
 
 const getAllTeacher = async () => {
-  useApi("user/all-guru").then(({ data }) => {
+  useApi("user/all-dosen").then(({ data }) => {
     console.log(data);
     teacherList.value = data;
   });
@@ -43,9 +43,9 @@ onMounted(() => {
     v-if="tableRef"
     v-slot="{ formData, validationErrors, isEditing }"
     ref="dialogSave"
-    path="absen-guru"
-    :title="role_id === 2 ? 'Absen Masuk' : 'Tambah Absen Guru'"
-    :edit-title="role_id === 2 ? 'Absen Keluar' : 'Edit Absen Guru'"
+    path="absen-dosen"
+    :title="role_id === 2 ? 'Absen Masuk' : 'Tambah Absen Dosen'"
+    :edit-title="role_id === 2 ? 'Absen Keluar' : 'Edit Absen Dosen'"
     :default-form="form"
     :request-form="form"
     :refresh-callback="tableRef.refresh"
@@ -55,9 +55,9 @@ onMounted(() => {
     <VCol cols="12" v-if="role_id === 1">
       <VAutocomplete
         v-model="formData.user_id"
-        label="Guru"
+        label="Dosen"
         :error-messages="validationErrors.user_id"
-        placeholder="Pilih Guru"
+        placeholder="Pilih Dosen"
         :items="teacherList"
         item-title="text"
         item-value="id"
@@ -139,12 +139,12 @@ onMounted(() => {
     <VCol cols="12">
       <AppTable
         ref="tableRef"
-        title="Data Absen Guru"
-        path="absen-guru"
+        title="Data Absen Dosen"
+        path="absen-dosen"
         :with-actions="true"
         :headers="[
           {
-            title: 'Guru',
+            title: 'Dosen',
             key: 'user_name',
             sortable: false,
           },

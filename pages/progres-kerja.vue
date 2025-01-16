@@ -8,17 +8,17 @@ const dialogSave = ref();
 const tableRef = ref();
 
 const form = ref({
-    user_id: null, // guruid
-    kelas_id: null, // guruid
-    mata_pelajaran_id: null, // guruid
-    pertemuan_ke: 0, // guruid
-    catatan: "", // guruid
-    file: null, // guruid
+    user_id: null, // dosenid
+    kelas_id: null, // dosenid
+    mata_kuliah_id: null, // dosenid
+    pertemuan_ke: 0, // dosenid
+    catatan: "", // dosenid
+    file: null, // dosenid
 });
 
-const guru = ref([]);
+const dosen = ref([]);
 const kelas = ref([]);
-const mata_pelajaran = ref([]);
+const mata_kuliah = ref([]);
 
 
 onMounted(() => {
@@ -29,16 +29,16 @@ onMounted(() => {
 //     }
 //   });
 
-    useApi("user/all-guru").then(({ data }) => {
-        guru.value = data;
+    useApi("user/all-dosen").then(({ data }) => {
+        dosen.value = data;
     });
 
     useApi("master/kelas/all").then(({ data }) => {
         kelas.value = data;
     });
 
-    useApi("master/mata-pelajaran/all").then(({ data }) => {
-        mata_pelajaran.value = data;
+    useApi("master/mata-kuliah/all").then(({ data }) => {
+        mata_kuliah.value = data;
     });
 });
 </script>
@@ -59,10 +59,10 @@ onMounted(() => {
     <VCol cols="12">
       <VAutocomplete
         v-model="formData.user_id"
-        label="Guru"
+        label="Dosen"
         :error-messages="validationErrors.user_id"
-        placeholder="Pilih Guru"
-        :items="guru"
+        placeholder="Pilih Dosen"
+        :items="dosen"
         item-title="text"
         item-value="id"
         required
@@ -88,11 +88,11 @@ onMounted(() => {
 
     <VCol cols="12">
       <VAutocomplete
-        v-model="formData.mata_pelajaran_id"
-        label="Mata Pelajaran"
-        :error-messages="validationErrors.mata_pelajaran_id"
-        placeholder="Pilih Mata Pelajaran"
-        :items="mata_pelajaran"
+        v-model="formData.mata_kuliah_id"
+        label="Mata Kuliah"
+        :error-messages="validationErrors.mata_kuliah_id"
+        placeholder="Pilih Mata Kuliah"
+        :items="mata_kuliah"
         item-title="text"
         item-value="id"
         required
@@ -152,7 +152,7 @@ onMounted(() => {
         :with-actions="true"
         :headers="[
           {
-            title: 'Guru',
+            title: 'Dosen',
             key: 'user_name',
             sortable: false,
           },
@@ -162,8 +162,8 @@ onMounted(() => {
             sortable: false,
           },
           {
-            title: 'Mata Pelajaran',
-            key: 'mata_pelajaran_name',
+            title: 'Mata Kuliah',
+            key: 'mata_kuliah_name',
             sortable: false,
           },
           {

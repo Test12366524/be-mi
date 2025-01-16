@@ -6,30 +6,30 @@ const { confirmDialog } = useCommonStore();
 
 const dialogSave = ref();
 const tableRef = ref();
-const guru = ref();
-const mata_pelajaran = ref();
-const filter_mata_pelajaran = ref();
+const dosen = ref();
+const mata_kuliah = ref();
+const filter_mata_kuliah = ref();
 
 const form = {
-  mata_pelajaran_id: "",
-  guru_id: "",
+  mata_kuliah_id: "",
+  dosen_id: "",
   title: "",
   description: "",
   file: "",
 };
 
-useApi("master/guru/all").then(({ data }) => {
-  guru.value = data;
+useApi("master/dosen/all").then(({ data }) => {
+  dosen.value = data;
 });
 
-const getMataKuliahByClass = (guru_id: number) => {
-  useApi("master/mata-pelajaran/all/" + guru_id).then(({ data }) => {
-    mata_pelajaran.value = data;
+const getMataKuliahByClass = (dosen_id: number) => {
+  useApi("master/mata-kuliah/all/" + dosen_id).then(({ data }) => {
+    mata_kuliah.value = data;
   });
 }
 
-useApi("master/mata-pelajaran/all").then(({ data }) => {
-  filter_mata_pelajaran.value = data;
+useApi("master/mata-kuliah/all").then(({ data }) => {
+  filter_mata_kuliah.value = data;
 });
 
 const role_id = ref();
@@ -44,25 +44,25 @@ onMounted(() => {
   });
   if (user.role_id == 1){
     status_action.value = user.role_id == 1;
-    useApi("master/guru/all").then(({ data }) => {
-      guru.value = data;
+    useApi("master/dosen/all").then(({ data }) => {
+      dosen.value = data;
     });
   } else if (user.role_id == 2){
     status_action.value = user.role_id == 2;
-    useApi("master/guru/all/" + user.id).then(({ data }) => {
-      guru.value = data;
+    useApi("master/dosen/all/" + user.id).then(({ data }) => {
+      dosen.value = data;
     });
   } else {
-    useApi("master/guru/all").then(({ data }) => {
-      guru.value = data;
+    useApi("master/dosen/all").then(({ data }) => {
+      dosen.value = data;
     });
   }
 
   role_id.value = user.role_id;
 });
 
-const mata_pelajaran_id = ref<number | null>(null);
-const guru_id = ref<number | null>(null);
+const mata_kuliah_id = ref<number | null>(null);
+const dosen_id = ref<number | null>(null);
 </script>
 
 <template>
@@ -80,12 +80,12 @@ const guru_id = ref<number | null>(null);
   >
     <VCol cols="12" md="6">
       <VAutocomplete
-        v-model="formData.guru_id"
-        label="Guru"
+        v-model="formData.dosen_id"
+        label="Dosen"
         density="compact"
-        :error-messages="validationErrors.guru_id"
-        placeholder="Pilih Guru"
-        :items="guru"
+        :error-messages="validationErrors.dosen_id"
+        placeholder="Pilih Dosen"
+        :items="dosen"
         item-title="text"
         item-value="id"
         required
@@ -93,20 +93,20 @@ const guru_id = ref<number | null>(null);
         clear-icon="ri-close-line"
         :readonly="isDetail"
         @update:model-value="
-          (guru_id: number) => {
-            getMataKuliahByClass(guru_id);
+          (dosen_id: number) => {
+            getMataKuliahByClass(dosen_id);
           }
         "
       />
     </VCol>
     <VCol cols="12" md="6">
       <VAutocomplete
-        v-model="formData.mata_pelajaran_id"
-        label="Mata Pelajaran"
+        v-model="formData.mata_kuliah_id"
+        label="Mata Kuliah"
         density="compact"
-        :error-messages="validationErrors.mata_pelajaran_id"
-        placeholder="Pilih Mata Pelajaran"
-        :items="mata_pelajaran"
+        :error-messages="validationErrors.mata_kuliah_id"
+        placeholder="Pilih Mata Kuliah"
+        :items="mata_kuliah"
         item-title="text"
         item-value="id"
         required
@@ -158,11 +158,11 @@ const guru_id = ref<number | null>(null);
             </VCol>
             <VCol cols="12" md="3" style="margin-block-start: 5px">
               <VAutocomplete
-                v-model="guru_id"
-                label="Guru"
+                v-model="dosen_id"
+                label="Dosen"
                 density="compact"
-                placeholder="Pilih Guru"
-                :items="guru"
+                placeholder="Pilih Dosen"
+                :items="dosen"
                 item-title="text"
                 item-value="id"
                 required
@@ -172,11 +172,11 @@ const guru_id = ref<number | null>(null);
             </VCol>
             <VCol cols="12" md="3" style="margin-block-start: 5px">
               <VAutocomplete
-                v-model="mata_pelajaran_id"
-                label="Mata Pelajaran"
+                v-model="mata_kuliah_id"
+                label="Mata Kuliah"
                 density="compact"
-                placeholder="Pilih Mata Pelajaran"
-                :items="filter_mata_pelajaran"
+                placeholder="Pilih Mata Kuliah"
+                :items="filter_mata_kuliah"
                 item-title="text"
                 item-value="id"
                 required
@@ -194,18 +194,18 @@ const guru_id = ref<number | null>(null);
         ref="tableRef"
         title="Data Silabus"
         path="silabus"
-        :guru_id="guru_id"
-        :mata_pelajaran_id="mata_pelajaran_id"
+        :dosen_id="dosen_id"
+        :mata_kuliah_id="mata_kuliah_id"
         :with-actions="status_action"
         :headers="[
           {
-            title: 'Guru',
-            key: 'guru_name',
+            title: 'Dosen',
+            key: 'dosen_name',
             sortable: false,
           },
           {
-            title: 'Mata Pelajaran',
-            key: 'mata_pelajaran_name',
+            title: 'Mata Kuliah',
+            key: 'mata_kuliah_name',
             sortable: false,
           },
           {

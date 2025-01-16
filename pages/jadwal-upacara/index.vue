@@ -6,14 +6,14 @@ const dialogSave = ref();
 const tableRef = ref();
 
 const form = ref({
-  pembina_id: null, // guruid
+  pembina_id: null, // dosenid
   date: null,
 });
 
 const teacherList = ref([]);
 
 const getAllTeacher = async () => {
-  useApi("master/guru/all").then(({ data }) => {
+  useApi("master/dosen/all").then(({ data }) => {
     teacherList.value = data;
   });
 };
@@ -46,9 +46,9 @@ onMounted(() => {
     <VCol cols="12">
       <VAutocomplete
         v-model="formData.pembina_id"
-        label="Guru"
+        label="Dosen"
         :error-messages="validationErrors.pembina_id"
-        placeholder="Pilih Guru"
+        placeholder="Pilih Dosen"
         :items="teacherList"
         item-title="text"
         item-value="id"

@@ -164,7 +164,7 @@ useApi("master/angkatan/all").then(({ data }) => {
 });
 
 const getDetails = (userId) => {
-  useApi(`siswa/user/${userId}`).then(async ({ data }) => {
+  useApi(`mahasiswa/user/${userId}`).then(async ({ data }) => {
     const payload = { ...data };
 
     await getProvinceList();
@@ -192,7 +192,7 @@ const getDetails = (userId) => {
 const updateData = () => {
   const payload = formData.value;
 
-  const { errors, success } = useApi(`siswa/${formData.value.id}`, {
+  const { errors, success } = useApi(`mahasiswa/${formData.value.id}`, {
     withNotif: true,
     method: "PUT",
     headers: {
@@ -240,14 +240,14 @@ watchEffect(() => {
             </VCol>
             <VCol cols="12">
               <VCard>
-                <VCardTitle class="mb-2"> Data Siswa </VCardTitle>
+                <VCardTitle class="mb-2"> Data Mahasiswa </VCardTitle>
                 <VCardText>
                   <VRow>
                     <VCol cols="12" md="6">
                       <VTextField
                         v-model="formData.nis"
                         :error-messages="validationErrors.nis"
-                        label="No Induk Siswa"
+                        label="No Induk Mahasiswa"
                       />
                     </VCol>
                     <VCol cols="12" md="6">
@@ -275,14 +275,14 @@ watchEffect(() => {
                       <VTextField
                         v-model="formData.nik"
                         :error-messages="validationErrors.nik"
-                        label="NIK Siswa"
+                        label="NIK Mahasiswa"
                       />
                     </VCol>
                     <VCol cols="12" md="6">
                       <VTextField
                         v-model="formData.name"
                         :error-messages="validationErrors.name"
-                        label="Nama Siswa"
+                        label="Nama Mahasiswa"
                       />
                     </VCol>
                     <VCol cols="12" md="6">
@@ -375,7 +375,7 @@ watchEffect(() => {
               </VCard>
 
               <VCard class="mt-4">
-                <VCardTitle class="mb-2"> Alamat Siswa </VCardTitle>
+                <VCardTitle class="mb-2"> Alamat Mahasiswa </VCardTitle>
                 <VCardText>
                   <VRow>
                     <VCol cols="12" md="6">

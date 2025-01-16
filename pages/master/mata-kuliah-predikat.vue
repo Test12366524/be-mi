@@ -5,10 +5,10 @@ const { confirmDialog } = useCommonStore()
 
 const dialogSave = ref()
 const tableRef = ref()
-const mataPelajaranList = ref([])
+const mataKuliahList = ref([])
 
 const form = {
-  mata_pelajaran_id: null,
+  mata_kuliah_id: null,
   min_nilai: null,
   max_nilai: null,
   predikat: '',
@@ -18,14 +18,14 @@ const form = {
 
 const predikatList = ['A', 'B', 'C', 'D', 'E']
 
-useApi('master/mata-pelajaran/all').then(({ data }) => {
-  mataPelajaranList.value = data
+useApi('master/mata-kuliah/all').then(({ data }) => {
+  mataKuliahList.value = data
 })
 
 // const { user } = useAuthStore()
 
 onMounted(() => {
-  // useApi(`level/master-mata-pelajaran-predikat/${user.role_id}`).then(({ data }) => {
+  // useApi(`level/master-mata-kuliah-predikat/${user.role_id}`).then(({ data }) => {
   //   if(data == 0){
   //     navigateTo(`/not-authorized`);
   //   }
@@ -38,20 +38,20 @@ onMounted(() => {
     v-if="tableRef"
     v-slot="{ formData, validationErrors, isEditing }"
     ref="dialogSave"
-    path="master/mata-pelajaran-predikat"
-    title="Tambah Mata Pelajaran Predikat"
-    edit-title="Edit Mata Pelajaran Predikat"
+    path="master/mata-kuliah-predikat"
+    title="Tambah Mata Kuliah Predikat"
+    edit-title="Edit Mata Kuliah Predikat"
     :default-form="form"
     :refresh-callback="tableRef.refresh"
     :request-form="form"
   >
     <VCol cols="12">
       <VAutocomplete
-        v-model="formData.mata_pelajaran_id"
-        label="Mata Pelajaran"
-        :error-messages="validationErrors.mata_pelajaran_id"
-        placeholder="Pilih Mata Pelajaran"
-        :items="mataPelajaranList"
+        v-model="formData.mata_kuliah_id"
+        label="Mata Kuliah"
+        :error-messages="validationErrors.mata_kuliah_id"
+        placeholder="Pilih Mata Kuliah"
+        :items="mataKuliahList"
         item-title="text"
         item-value="id"
         required
@@ -154,13 +154,13 @@ onMounted(() => {
     <VCol cols="12">
       <AppTable
         ref="tableRef"
-        title="Data Mata Pelajaran Predikat"
-        path="master/mata-pelajaran-predikat"
+        title="Data Mata Kuliah Predikat"
+        path="master/mata-kuliah-predikat"
         :with-actions="true"
         :headers="[
           {
-            title: 'Mata Pelajaran',
-            key: 'mata_pelajaran_name',
+            title: 'Mata Kuliah',
+            key: 'mata_kuliah_name',
             sortable: false,
           },
           {
@@ -202,8 +202,8 @@ onMounted(() => {
               size="small"
               @click="
                 confirmDialog.show({
-                  title: 'Hapus Mata Pelajaran Predikat',
-                  message: `Anda yakin ingin menghapus Mata Pelajaran Predikat ${
+                  title: 'Hapus Mata Kuliah Predikat',
+                  message: `Anda yakin ingin menghapus Mata Kuliah Predikat ${
                     (item as any).name
                   }?`,
                   onConfirm: () => remove((item as any).id),

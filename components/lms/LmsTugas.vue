@@ -5,15 +5,16 @@ import { VCol, VTextField, VTextarea } from "vuetify/lib/components/index.mjs";
 const { confirmDialog } = useCommonStore();
 const { user } = useAuthStore();
 
-const taskFromGuruDialog = ref();
-const taskForSiswaDialog = ref();
+const taskFromDosenDialog = ref();
+const taskForMahasiswaDialog = ref();
 const tableRef = ref();
-const guru = ref();
-const mata_pelajaran = ref();
+const dosen = ref();
+const mata_kuliah = ref();
+const filter_mata_kuliah = ref();
 
 const form = {
-  mata_pelajaran_id: "",
-  guru_id: "",
+  mata_kuliah_id: "",
+  dosen_id: "",
   title: "",
   subtitle: "",
   file_pdf: "",
@@ -34,35 +35,39 @@ const formUploadTugas = ref({
 
 
 
-const getMataPelajaranByClass = (guru_id: number) => {
-  useApi("master/mata-pelajaran/all/" + guru_id).then(({ data }) => {
-    mata_pelajaran.value = data;
+const getMataKuliahByClass = (dosen_id: number) => {
+  useApi("master/mata-kuliah/all/" + dosen_id).then(({ data }) => {
+    mata_kuliah.value = data;
   });
 }
 
 const role_id = computed(() => user.role_id);
 
 if(user.role_id == 1){
-  useApi("master/guru/all").then(({ data }) => {
-    guru.value = data;
+  useApi("master/dosen/all").then(({ data }) => {
+    dosen.value = data;
+  });
+
+  useApi("master/mata-kuliah/all").then(({ data }) => {
+    filter_mata_kuliah.value = data;
   });
 }else if(user.role_id == 2){
-  useApi("master/guru/all/"+user.id).then(({ data }) => {
-    guru.value = data;
+  useApi("master/dosen/all/"+user.id).then(({ data }) => {
+    dosen.value = data;
   });
 }else{
-  useApi("master/guru/all").then(({ data }) => {
-    guru.value = data;
+  useApi("master/dosen/all").then(({ data }) => {
+    dosen.value = data;
   });
 }
 
-const isGuruOrAdmin = computed(
+const isDosenOrAdmin = computed(
   () => role_id.value === 1 || role_id.value === 2
 );
 
-const isGuru = computed(() => role_id.value === 2);
+const isDosen = computed(() => role_id.value === 2);
 
-const isSiswa = computed(() => role_id.value === 3);
+const isMahasiswa = computed(() => role_id.value === 3);
 
 const handleUploadTugas = (item) => {
   const payload = { ...item };
@@ -71,27 +76,31 @@ const handleUploadTugas = (item) => {
   payload.lms_id = item.id;
   payload.description = "";
   payload.file = null;
-  taskForSiswaDialog.value.show(payload);
+  taskForMahasiswaDialog.value.show(payload);
 };
 
-const getGuruDetails = () => {
-  const url = `master/guru?search=${user.email}`;
+const getDosenDetails = () => {
+  const url = `master/dosen?search=${user.email}`;
   useApi(url).then(({ data }) => {
     if (data.items){
-      form.guru_id = data.items[0].id;
-      getMataPelajaranByClass(data.items[0].id)
+      form.dosen_id = data.items[0].id;
+      getMataKuliahByClass(data.items[0].id);
+
+      useApi("master/mata-kuliah/all/" + data.items[0].id).then(({ data }) => {
+        filter_mata_kuliah.value = data;
+      });
     }  
   });
 };
 
 onMounted(() => {
-  if (isGuru.value) getGuruDetails();
-  if (form.guru_id > 0) getMataPelajaranByClass(form.guru_id)
+  if (isDosen.value) getDosenDetails();
+  if (form.dosen_id > 0) getMataKuliahByClass(form.dosen_id)
   tableRef.value.refresh();
 });
 
-const mata_pelajaran_id = ref<number | null>(null);
-const guru_id = ref<number | null>(null);
+const mata_kuliah_id = ref<number | null>(null);
+const dosen_id = ref<number | null>(null);
 
 const resetTime = (date: any) => {
   const d = new Date(date);
@@ -105,7 +114,7 @@ const resetTime = (date: any) => {
   <SaveFileDialog
     v-if="tableRef"
     v-slot="{ formData, validationErrors, isEditing }"
-    ref="taskForSiswaDialog"
+    ref="taskForMahasiswaDialog"
     width="1200"
     path="lms-tugas"
     title="Upload Tugas"
@@ -117,8 +126,8 @@ const resetTime = (date: any) => {
   >
     <VCol cols="12" md="6">
       <VTextField
-        v-model="formData.mata_pelajaran_name"
-        label="Mata Pelajaran"
+        v-model="formData.mata_kuliah_name"
+        label="Mata Kuliah"
         readonly
       />
     </VCol>
@@ -194,7 +203,7 @@ const resetTime = (date: any) => {
   <SaveFileDialog
     v-if="tableRef"
     v-slot="{ formData, validationErrors, isEditing }"
-    ref="taskFromGuruDialog"
+    ref="taskFromDosenDialog"
     width="1200"
     path="lms"
     title="Tambah Tugas"
@@ -204,33 +213,33 @@ const resetTime = (date: any) => {
   >
     <VCol cols="12" md="6">
       <VAutocomplete
-        v-model="formData.guru_id"
-        label="Guru"
+        v-model="formData.dosen_id"
+        label="Dosen"
         density="compact"
-        :error-messages="validationErrors.guru_id"
-        placeholder="Pilih Guru"
-        :items="guru"
+        :error-messages="validationErrors.dosen_id"
+        placeholder="Pilih Dosen"
+        :items="dosen"
         item-title="text"
         item-value="id"
-        :readonly="isGuru"
+        :readonly="isDosen"
         required
-        :clearable="!isGuru"
+        :clearable="!isDosen"
         clear-icon="ri-close-line"
         @update:model-value="
-          (guru_id: number) => {
-            getMataPelajaranByClass(guru_id);
+          (dosen_id: number) => {
+            getMataKuliahByClass(dosen_id);
           }
         "
       />
     </VCol>
     <VCol cols="12" md="6">
       <VAutocomplete
-        v-model="formData.mata_pelajaran_id"
-        label="Mata Pelajaran"
+        v-model="formData.mata_kuliah_id"
+        label="Mata Kuliah"
         density="compact"
-        :error-messages="validationErrors.mata_pelajaran_id"
-        placeholder="Pilih Mata Pelajaran"
-        :items="mata_pelajaran"
+        :error-messages="validationErrors.mata_kuliah_id"
+        placeholder="Pilih Mata Kuliah"
+        :items="mata_kuliah"
         item-title="text"
         item-value="id"
         required
@@ -323,9 +332,9 @@ const resetTime = (date: any) => {
           <VRow>
             <VCol cols="12" md="6">
               <VBtn
-                v-if="isGuruOrAdmin"
+                v-if="isDosenOrAdmin"
                 color="primary"
-                @click="taskFromGuruDialog.show()"
+                @click="taskFromDosenDialog.show()"
               >
                 <VIcon end icon="ri-add-fill" />
                 Tambah Tugas
@@ -333,11 +342,11 @@ const resetTime = (date: any) => {
             </VCol>
             <VCol cols="12" md="3" style="margin-block-start: 5px">
               <VAutocomplete
-                v-model="guru_id"
-                label="Guru"
+                v-model="dosen_id"
+                label="Dosen"
                 density="compact"
-                placeholder="Pilih Guru"
-                :items="guru"
+                placeholder="Pilih Dosen"
+                :items="dosen"
                 item-title="text"
                 item-value="id"
                 required
@@ -347,11 +356,11 @@ const resetTime = (date: any) => {
             </VCol>
             <VCol cols="12" md="3" style="margin-block-start: 5px">
               <VAutocomplete
-                v-model="mata_pelajaran_id"
-                label="Mata Pelajaran"
+                v-model="mata_kuliah_id"
+                label="Mata Kuliah"
                 density="compact"
-                placeholder="Pilih Mata Pelajaran"
-                :items="mata_pelajaran"
+                placeholder="Pilih Mata Kuliah"
+                :items="filter_mata_kuliah"
                 item-title="text"
                 item-value="id"
                 required
@@ -369,18 +378,18 @@ const resetTime = (date: any) => {
         ref="tableRef"
         title="Daftar Tugas"
         path="lms"
-        :guru_id="guru_id"
-        :mata_pelajaran_id="mata_pelajaran_id"
+        :dosen_id="dosen_id"
+        :mata_kuliah_id="mata_kuliah_id"
         :with-actions="true"
         :headers="[
           {
-            title: 'Guru',
-            key: 'guru_name',
+            title: 'Dosen',
+            key: 'dosen_name',
             sortable: false,
           },
           {
-            title: 'Mata Pelajaran',
-            key: 'mata_pelajaran_name',
+            title: 'Mata Kuliah',
+            key: 'mata_kuliah_name',
             sortable: false,
           },
           {
@@ -403,7 +412,7 @@ const resetTime = (date: any) => {
         <template #actions="{ item, remove }">
           <div class="d-flex gap-1">
             <IconBtn
-              v-if="isGuruOrAdmin"
+              v-if="isDosenOrAdmin"
               size="small"
               @click="
                 () => {
@@ -414,14 +423,14 @@ const resetTime = (date: any) => {
                   payload.until_date = new Date(payload.until_date)
                     .toISOString()
                     .substring(0, 10);
-                  taskFromGuruDialog.show(payload);
+                  taskFromDosenDialog.show(payload);
                 }
               "
             >
               <VIcon icon="ri-pencil-line" />
             </IconBtn>
             <IconBtn
-              v-if="isGuruOrAdmin"
+              v-if="isDosenOrAdmin"
               size="small"
               @click="
                 confirmDialog.show({
@@ -436,7 +445,7 @@ const resetTime = (date: any) => {
               <VIcon icon="ri-delete-bin-line" />
             </IconBtn>
             <IconBtn
-              v-if="isSiswa && resetTime(new Date(item.until_date)) >= resetTime(new Date())"
+              v-if="isMahasiswa && resetTime(new Date(item.until_date)) >= resetTime(new Date())"
               label="Upload Jawaban"
               size="small"
               @click="handleUploadTugas(item)"

@@ -5,7 +5,7 @@ const formRef = ref();
 const { user, validateLogin } = useAuthStore();
 
 const formData = ref({
-  mata_pelajaran_id: null,
+  mata_kuliah_id: null,
   name: "",
   nik: "",
   nuptk: "",
@@ -27,7 +27,7 @@ const previewPhoto = ref(null);
 const validationErrors = ref({});
 const refVForm = ref(null);
 const tugasTambahanList = ref([]);
-const mataPelajaranList = ref([]);
+const mataKuliahList = ref([]);
 
 const getTugasTambahan = async () => {
   await useApi("master/tugas-tambahan/all", { withLoader: false }).then(
@@ -37,16 +37,16 @@ const getTugasTambahan = async () => {
   );
 };
 
-const getMataPelajaran = async () => {
-  await useApi("master/mata-pelajaran/all", { withLoader: false }).then(
+const getMataKuliah = async () => {
+  await useApi("master/mata-kuliah/all", { withLoader: false }).then(
     ({ data }) => {
-      mataPelajaranList.value = data;
+      mataKuliahList.value = data;
     }
   );
 };
 
 const getDetails = (userId) => {
-  useApi(`master/guru/user/${userId}`).then(({ data }) => {
+  useApi(`master/dosen/user/${userId}`).then(({ data }) => {
     console.log("getDetails", data);
     formData.value = data;
     formData.value.photo = data.photo ? getFileUrl(data.photo) : null;
@@ -57,13 +57,13 @@ const getDetails = (userId) => {
 onMounted(async () => {
   getDetails(user.id);
   getTugasTambahan();
-  getMataPelajaran();
+  getMataKuliah();
 });
 
 const updateData = () => {
   const payload = formData.value;
 
-  const { errors, success } = useApi(`master/guru/${formData.value.id}`, {
+  const { errors, success } = useApi(`master/dosen/${formData.value.id}`, {
     withNotif: true,
     method: "PUT",
     headers: {
@@ -107,14 +107,14 @@ watchEffect(() => {
             </VCol>
             <VCol cols="12">
               <VCard>
-                <VCardTitle class="mb-2"> Data Guru </VCardTitle>
+                <VCardTitle class="mb-2"> Data Dosen </VCardTitle>
                 <VCardText>
                   <VRow>
                     <VCol cols="12" md="6">
                       <VTextField
                         v-model="formData.name"
                         :error-messages="validationErrors.name"
-                        label="Nama Guru"
+                        label="Nama Dosen"
                       />
                     </VCol>
                     <VCol cols="12" md="6">
@@ -216,11 +216,11 @@ watchEffect(() => {
                     </VCol>
                     <VCol cols="12" md="6">
                       <VAutocomplete
-                        v-model="formData.mata_pelajaran_id"
-                        label="Mata Pelajaran"
-                        :error-messages="validationErrors.mata_pelajaran_id"
-                        placeholder="Pilih Mata Pelajaran"
-                        :items="mataPelajaranList"
+                        v-model="formData.mata_kuliah_id"
+                        label="Mata Kuliah"
+                        :error-messages="validationErrors.mata_kuliah_id"
+                        placeholder="Pilih Mata Kuliah"
+                        :items="mataKuliahList"
                         item-title="text"
                         item-value="id"
                         required

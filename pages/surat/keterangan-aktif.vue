@@ -9,13 +9,13 @@ const tableRef = ref()
 
 const form = ref({
   penomoran: '',
-  siswa_id: '',
+  mahasiswa_id: '',
 })
 
 const studentList = ref([])
 
 const getAllStudent = async () => {
-  useApi('siswa/all').then(({ data }) => {
+  useApi('mahasiswa/all').then(({ data }) => {
     studentList.value = data
   })
 }
@@ -69,10 +69,10 @@ onMounted(() => {
     </VCol>
     <VCol cols="12">
       <VAutocomplete
-        v-model="formData.siswa_id"
-        label="Siswa"
-        :error-messages="validationErrors.siswa_id"
-        placeholder="Pilih Siswa"
+        v-model="formData.mahasiswa_id"
+        label="Mahasiswa"
+        :error-messages="validationErrors.mahasiswa_id"
+        placeholder="Pilih Mahasiswa"
         :items="studentList"
         item-title="text"
         item-value="id"
@@ -131,8 +131,8 @@ onMounted(() => {
             sortable: false,
           },
           {
-            title: 'Siswa',
-            key: 'siswa_name',
+            title: 'Mahasiswa',
+            key: 'mahasiswa_name',
             sortable: false,
           },
         ]"

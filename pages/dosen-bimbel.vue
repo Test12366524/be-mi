@@ -6,35 +6,35 @@ const dialogSave = ref();
 const tableRef = ref();
 
 const form = ref({
-  guru_id: null, // guruid
-  mata_pelajaran_id: null,
+  dosen_id: null, // dosenid
+  mata_kuliah_id: null,
   biaya: 0,
 });
 
 const teacherList = ref([]);
-const mataPelajaranList = ref([]);
+const mataKuliahList = ref([]);
 
 const getAllTeacher = async () => {
-  useApi("master/guru/all").then(({ data }) => {
+  useApi("master/dosen/all").then(({ data }) => {
     teacherList.value = data;
   });
 };
 
-const getAllMataPelajaran = async () => {
-  useApi("master/mata-pelajaran/all").then(({ data }) => {
-    mataPelajaranList.value = data;
+const getAllMataKuliah = async () => {
+  useApi("master/mata-kuliah/all").then(({ data }) => {
+    mataKuliahList.value = data;
   });
 };
 
 onMounted(() => {
   const { user } = useAuthStore();
-  useApi(`level/guru-bimbel/${user.role_id}`).then(({ data }) => {
+  useApi(`level/dosen-bimbel/${user.role_id}`).then(({ data }) => {
     if(data == 0){
       navigateTo(`/not-authorized`);
     }
   });
   getAllTeacher();
-  getAllMataPelajaran();
+  getAllMataKuliah();
 });
 </script>
 
@@ -43,9 +43,9 @@ onMounted(() => {
     v-if="tableRef"
     v-slot="{ formData, validationErrors, isEditing }"
     ref="dialogSave"
-    path="guru-bimbel"
-    title="Tambah Guru Bimbel"
-    edit-title="Edit Guru Bimbel"
+    path="dosen-bimbel"
+    title="Tambah Dosen Bimbel"
+    edit-title="Edit Dosen Bimbel"
     :default-form="form"
     :request-form="form"
     :refresh-callback="tableRef.refresh"
@@ -53,10 +53,10 @@ onMounted(() => {
   >
     <VCol cols="12">
       <VAutocomplete
-        v-model="formData.guru_id"
-        label="Guru"
-        :error-messages="validationErrors.guru_id"
-        placeholder="Pilih Guru"
+        v-model="formData.dosen_id"
+        label="Dosen"
+        :error-messages="validationErrors.dosen_id"
+        placeholder="Pilih Dosen"
         :items="teacherList"
         item-title="text"
         item-value="id"
@@ -68,11 +68,11 @@ onMounted(() => {
     </VCol>
     <VCol cols="12">
       <VAutocomplete
-        v-model="formData.mata_pelajaran_id"
-        label="Mata Pelajaran"
-        :error-messages="validationErrors.mata_pelajaran_id"
-        placeholder="Pilih Mata Pelajaran"
-        :items="mataPelajaranList"
+        v-model="formData.mata_kuliah_id"
+        label="Mata Kuliah"
+        :error-messages="validationErrors.mata_kuliah_id"
+        placeholder="Pilih Mata Kuliah"
+        :items="mataKuliahList"
         item-title="text"
         item-value="id"
         required
@@ -114,18 +114,18 @@ onMounted(() => {
     <VCol cols="12">
       <AppTable
         ref="tableRef"
-        title="Data Guru Bimbel"
-        path="guru-bimbel"
+        title="Data Dosen Bimbel"
+        path="dosen-bimbel"
         :with-actions="true"
         :headers="[
           {
-            title: 'Guru',
-            key: 'guru_name',
+            title: 'Dosen',
+            key: 'dosen_name',
             sortable: false,
           },
           {
-            title: 'Mata Pelajaran',
-            key: 'mata_pelajaran_name',
+            title: 'Mata Kuliah',
+            key: 'mata_kuliah_name',
             sortable: false,
           },
           {

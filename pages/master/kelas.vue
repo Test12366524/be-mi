@@ -6,7 +6,7 @@ const { confirmDialog } = useCommonStore();
 const dialogSave = ref();
 const tableRef = ref();
 const jurusans = ref();
-const guru = ref();
+const dosen = ref();
 
 const form = {
   wali_kelas_id: undefined,
@@ -20,8 +20,8 @@ useApi("master/jurusan/all").then(({ data }) => {
   jurusans.value = data;
 });
 
-useApi("master/guru/all").then(({ data }) => {
-  guru.value = data;
+useApi("master/dosen/all").then(({ data }) => {
+  dosen.value = data;
 });
 
 onMounted(() => {
@@ -52,7 +52,7 @@ onMounted(() => {
         density="compact"
         :error-messages="validationErrors.wali_kelas_id"
         placeholder="Pilih Wali Kelas"
-        :items="guru"
+        :items="dosen"
         item-title="text"
         item-value="id"
         required

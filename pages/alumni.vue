@@ -5,17 +5,17 @@ const { confirmDialog } = useCommonStore();
 
 const dialogSave = ref();
 const tableRef = ref();
-const siswa = ref();
+const mahasiswa = ref();
 
 const form = {
-  siswa_id: undefined,
+  mahasiswa_id: undefined,
   kerja: "",
   perusahaan: "",
   alamat_perusahaan: "",
 };
 
-useApi("siswa/all").then(({ data }) => {
-  siswa.value = data;
+useApi("mahasiswa/all").then(({ data }) => {
+  mahasiswa.value = data;
 });
 
 
@@ -32,7 +32,7 @@ onMounted(() => {
 <template>
   <SaveDialog
     v-if="tableRef"
-    path="siswa/alumni"
+    path="mahasiswa/alumni"
     title="Tambah Alumni"
     edit-title="Edit Alumni"
     v-slot="{ formData, validationErrors, isEditing }"
@@ -42,12 +42,12 @@ onMounted(() => {
   >
     <VCol cols="12" md="12">
       <VAutocomplete
-        v-model="formData.siswa_id"
-        label="Siswa"
+        v-model="formData.mahasiswa_id"
+        label="Mahasiswa"
         density="compact"
-        :error-messages="validationErrors.siswa_id"
-        placeholder="Pilih Siswa"
-        :items="siswa"
+        :error-messages="validationErrors.mahasiswa_id"
+        placeholder="Pilih Mahasiswa"
+        :items="mahasiswa"
         item-title="text"
         item-value="id"
         required
@@ -99,12 +99,12 @@ onMounted(() => {
       <AppTable
         ref="tableRef"
         title="Data Alumni"
-        path="siswa/alumni"
+        path="mahasiswa/alumni"
         :with-actions="true"
         :headers="[
           {
-            title: 'Siswa',
-            key: 'siswa_name',
+            title: 'Mahasiswa',
+            key: 'mahasiswa_name',
             sortable: false,
           },
           {
