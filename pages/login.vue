@@ -11,7 +11,7 @@ import authV2LoginMaskLight from "@images/pages/auth-v2-login-mask-light.png";
 const { pageLoader } = useCommonStore();
 const { login } = useAuthStore();
 
-import img from "@images/bg-login-mui.jpg";
+import img from "@images/login-page.png";
 import imgLogo from "@images/logo-muijakarta.png";
 
 const authThemeImg = useGenerateImageVariant(
