@@ -571,7 +571,7 @@ onMounted(() => {
           // {
           //   title: 'Pendidikan Terakhir',
           //   key: 'pendidikan_terakhir',
-          //   sortable: false,
+          //   sortable: false, 
           // },
           {
             title: 'Status',
