@@ -1,183 +1,185 @@
 <script setup lang="ts">
-import { VTextarea, VTextField } from 'vuetify/lib/components/index.mjs';
+import { useAuthStore } from "@/stores/auth"; // Sesuaikan dengan path store Anda
+import { useCommonStore } from "@/stores/common"; // Sesuaikan dengan path store Anda
+import { computed, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 
 const { confirmDialog } = useCommonStore();
-
-const dialogSave = ref();
-
-const tableRef = ref();
-
 const route = useRoute();
-
 const kusionerId = computed(() => route.params.id);
 
-const form = ref({
-  kuisioner_id : kusionerId.value, // dosenid
-  nomer: "",
-  soal: "",
-  jawaban_a: "",
-  jawaban_b: "",
-  jawaban_c: "",
-  jawaban_d: "",
-  jawaban_e: "",
-  jawaban_benar: "",
-});
-
-const jawaban = ref([
-  { id: "A", text: "A" },
-  { id: "B", text: "B" },
-  { id: "C", text: "C" },
-  { id: "D", text: "D" },
-  { id: "E", text: "E" },
+const questions = ref([
+  {
+    id: 1,
+    kuisioner_id: 1,
+    nomer: 1,
+    soal: "WHY",
+    jawaban_a: "A",
+    jawaban_b: "B",
+    jawaban_c: "C",
+    jawaban_d: "D",
+    jawaban_e: "E",
+    jawaban_benar: "A",
+    created_at: "2025-01-17T18:06:15.601Z",
+    updated_at: "2025-01-17T18:06:15.601Z",
+    kuisioner_title: "Pertemuan 1 Bahasa Arab Dosen A",
+    kuisioner_description: "test",
+    mata_kuliah_name: "Bahasa Arab",
+  },
+  {
+    id: 2,
+    kuisioner_id: 1,
+    nomer: 2,
+    soal: "HOW",
+    jawaban_a: "A",
+    jawaban_b: "B",
+    jawaban_c: "C",
+    jawaban_d: "D",
+    jawaban_e: "E",
+    jawaban_benar: "B",
+    created_at: "2025-01-17T18:06:32.705Z",
+    updated_at: "2025-01-17T18:06:32.705Z",
+    kuisioner_title: "Pertemuan 1 Bahasa Arab Dosen A",
+    kuisioner_description: "test",
+    mata_kuliah_name: "Bahasa Arab",
+  },
+  {
+    id: 3,
+    kuisioner_id: 1,
+    nomer: 3,
+    soal: "WHAT",
+    jawaban_a: "A",
+    jawaban_b: "B",
+    jawaban_c: "C",
+    jawaban_d: "D",
+    jawaban_e: "E",
+    jawaban_benar: "C",
+    created_at: "2025-01-17T18:08:55.398Z",
+    updated_at: "2025-01-17T18:08:55.398Z",
+    kuisioner_title: "Pertemuan 1 Bahasa Arab Dosen A",
+    kuisioner_description: "test",
+    mata_kuliah_name: "Bahasa Arab",
+  },
 ]);
+
+const selectedAnswers = ref({});
+const currentQuestionIndex = ref(0);
 
 onMounted(() => {
   const { user } = useAuthStore();
 });
+
+const submitAnswers = () => {
+  // Logika untuk mengirim jawaban
+  console.log(selectedAnswers.value);
+  confirmDialog("Jawaban telah dikirim!");
+};
+
+const nextQuestion = () => {
+  if (currentQuestionIndex.value < questions.value.length - 1)
+    currentQuestionIndex.value++;
+};
+
+const prevQuestion = () => {
+  if (currentQuestionIndex.value > 0) currentQuestionIndex.value--;
+};
+
+const progress = computed(() => {
+  return ((currentQuestionIndex.value + 1) / questions.value.length) * 100;
+});
 </script>
 
 <template>
-  <SaveDialog
-    v-if="tableRef"
-    v-slot="{ formData, validationErrors, isEditing }"
-    ref="dialogSave"
-    path="kuisioner-detail"
-    title="Tambah Pilihan Ganda Kuisioner"
-    edit-title="Edit Pilihan Ganda Kuisioner"
-    :default-form="form"
-    :request-form="form"
-    :refresh-callback="tableRef.refresh"
-    width="1200"
-  >
-    <VCol cols="12" md="4">
-        <VTextField
-            type="number"
-            v-model="formData.nomer"
-            :error-messages="validationErrors.nomer"
-            label="Nomer"
+  <VContainer>
+    <VRow>
+      <VCol cols="12">
+        <VCard class="pt-3 pb-4">
+          <VCardTitle>
+            {{ questions[0].kuisioner_title }}
+          </VCardTitle>
+          <VCardSubtitle>
+            Mata Kuliah: {{ questions[0].mata_kuliah_name }}
+          </VCardSubtitle>
+        </VCard>
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol cols="12">
+        <VProgressLinear
+          :model-value="progress"
+          color="primary"
+          height="10"
+          striped
         />
-    </VCol>
-    <VCol cols="12" md="8">
-        <VAutocomplete
-            v-model="formData.jawaban_benar"
-            label="Jawaban Benar"
-            :error-messages="validationErrors.jawaban_benar"
-            placeholder="Pilih Jawaban Benar"
-            :items="jawaban"
-            item-title="text"
-            item-value="text"
-            required
-            clearable
-            clear-icon="ri-close-line"
-        />
-    </VCol>
-    <VCol cols="12" md="12">
-        <VTextarea
-            v-model="formData.soal"
-            :error-messages="validationErrors.soal"
-            label="Soal"
-            rows="2"
-        />
-    </VCol>
-    <VCol cols="12" md="6">
-        <VTextField
-            v-model="formData.jawaban_a"
-            :error-messages="validationErrors.jawaban_a"
-            label="Jawaban A"
-        />
-    </VCol>
-    <VCol cols="12" md="6">
-        <VTextField
-            v-model="formData.jawaban_b"
-            :error-messages="validationErrors.jawaban_b"
-            label="Jawaban B"
-        />
-    </VCol>
-    <VCol cols="12" md="6">
-        <VTextField
-            v-model="formData.jawaban_c"
-            :error-messages="validationErrors.jawaban_c"
-            label="Jawaban C"
-        />
-    </VCol>
-    <VCol cols="12" md="6">
-        <VTextField
-            v-model="formData.jawaban_d"
-            :error-messages="validationErrors.jawaban_d"
-            label="Jawaban D"
-        />
-    </VCol>
-    <VCol cols="12" md="6">
-        <VTextField
-            v-model="formData.jawaban_e"
-            :error-messages="validationErrors.jawaban_e"
-            label="Jawaban E"
-        />
-    </VCol>
-  </SaveDialog>
-
-  <VRow>
-    <VCol cols="12" v-if="kusionerId">
-      <AppTable
-        ref="tableRef"
-        title="Daftar Pilihan Ganda Kusioner"
-        path="kuisioner/mahasiswa"
-        :kusioner_id="kusionerId"
-        :with-actions="true"
-        :headers="[
-          {
-            title: 'Nomor',
-            key: 'nomer',
-            sortable: false,
-          },
-          {
-            title: 'Soal',
-            key: 'soal',
-            sortable: false,
-          },
-          {
-            title: 'Jawaban Benar',
-            key: 'jawaban_benar',
-            sortable: false,
-          },
-        ]"
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol cols="12">
+        <VCard>
+          <VCardText>
+            <h3>
+              {{ questions[currentQuestionIndex].nomer }}.
+              {{ questions[currentQuestionIndex].soal }}
+            </h3>
+            <VRadioGroup
+              v-model="selectedAnswers[questions[currentQuestionIndex].id]"
+              :name="`question-${questions[currentQuestionIndex].id}`"
+            >
+              <VRadio
+                :label="questions[currentQuestionIndex].jawaban_a"
+                :value="questions[currentQuestionIndex].jawaban_a"
+              />
+              <VRadio
+                :label="questions[currentQuestionIndex].jawaban_b"
+                :value="questions[currentQuestionIndex].jawaban_b"
+              />
+              <VRadio
+                :label="questions[currentQuestionIndex].jawaban_c"
+                :value="questions[currentQuestionIndex].jawaban_c"
+              />
+              <VRadio
+                :label="questions[currentQuestionIndex].jawaban_d"
+                :value="questions[currentQuestionIndex].jawaban_d"
+              />
+              <VRadio
+                :label="questions[currentQuestionIndex].jawaban_e"
+                :value="questions[currentQuestionIndex].jawaban_e"
+              />
+            </VRadioGroup>
+          </VCardText>
+        </VCard>
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol cols="6">
+        <VBtn
+          color="secondary"
+          :disabled="currentQuestionIndex === 0"
+          @click="prevQuestion"
+        >
+          Sebelumnya
+        </VBtn>
+      </VCol>
+      <VCol
+        v-if="currentQuestionIndex === questions.length - 1"
+        cols="6"
+        class="text-right"
       >
-        <template #actions="{ item, remove }">
-          <div class="d-flex gap-1">
-            <IconBtn
-              label="Edit"
-              size="small"
-              @click="
-                () => {
-                  const payload = { ...item };
-                  payload.date = addDaysToDate(
-                    convertToSimpleDate(payload.date),
-                    1
-                  );
-                  dialogSave.show(payload, false);
-                }
-              "
-            >
-              <VIcon icon="ri-pencil-line" />
-            </IconBtn>
-            <IconBtn
-              label="Hapus"
-              size="small"
-              @click="
-                confirmDialog.show({
-                  title: 'Hapus Pilihan Ganda Kuisioner',
-                  message: `Anda yakin ingin menghapus Pilihan Ganda Kuisioner ${
-                    (item as any).name
-                  }?`,
-                  onConfirm: () => remove((item as any).id),
-                })
-              "
-            >
-              <VIcon icon="ri-delete-bin-line" />
-            </IconBtn>
-          </div>
-        </template>
-      </AppTable>
-    </VCol>
-  </VRow>
+        <VBtn color="success" @click="submitAnswers"> Kirim Jawaban </VBtn>
+      </VCol>
+      <VCol v-else cols="6" class="text-right">
+        <VBtn
+          color="primary"
+          :disabled="currentQuestionIndex === questions.length - 1"
+          @click="nextQuestion"
+        >
+          Selanjutnya
+        </VBtn>
+      </VCol>
+    </VRow>
+  </VContainer>
 </template>
+
+<style scoped>
+/* Tambahkan gaya CSS jika diperlukan */
+</style>

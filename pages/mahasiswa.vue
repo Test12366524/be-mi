@@ -189,28 +189,54 @@ const { pageLoader } = useCommonStore();
 const handleShowDialog = async (data, isDetail) => {
   pageLoader.show();
 
-  const payload = { ...data };
+  try {
+    const payload = { ...data };
 
-  payload.province_id = payload.province_id.toString();
-  payload.city_id = payload.city_id.toString();
-  await getCityList(payload.province_id);
-  payload.district_id = payload.district_id.toString();
-  await getDistrictList(payload.city_id);
-  payload.subdistrict_id = payload.subdistrict_id.toString();
-  await getSubDistrictList(payload.district_id);
+    // Pastikan nilai tidak null/undefined sebelum memanggil .toString()
+    if (payload.province_id) {
+      payload.province_id = payload.province_id.toString();
+      await getCityList(payload.province_id);
+      if(payload.province_id == 0 || payload.province_id == '0'){
+        getProvinceList();
+      }
+    }
 
-  
-  if (payload.photo) previewPhoto.value = getFileUrl(payload.photo);
+    if (payload.city_id) {
+      payload.city_id = payload.city_id.toString();
+      await getDistrictList(payload.city_id);
+    }
+    if (payload.district_id) {
+      payload.district_id = payload.district_id.toString();
+      await getSubDistrictList(payload.district_id);
+    }
 
-  payload.entrance_date = new Date(payload.entrance_date)
-    .toISOString()
-    .substring(0, 10);
-  payload.birth_date = new Date(payload.birth_date)
-    .toISOString()
-    .substring(0, 10);
-  form.value = payload;
-  dialogSave.value.show(payload, isDetail);
-  pageLoader.hide();
+    if (payload.subdistrict_id) {
+      payload.subdistrict_id = payload.subdistrict_id.toString();
+    }
+
+    // Cek dan preview photo jika tersedia
+    if (payload.photo) previewPhoto.value = getFileUrl(payload.photo);
+
+    // Format tanggal dengan aman
+    if (payload.entrance_date) {
+      payload.entrance_date = new Date(payload.entrance_date)
+        .toISOString()
+        .substring(0, 10);
+    }
+    if (payload.birth_date) {
+      payload.birth_date = new Date(payload.birth_date)
+        .toISOString()
+        .substring(0, 10);
+    }
+
+    form.value = payload;
+    dialogSave.value.show(payload, isDetail);
+  } catch (error) {
+    console.error('Error in handleShowDialog:', error);
+    // Tampilkan pesan error jika diperlukan
+  } finally {
+    pageLoader.hide();
+  }
 };
 </script>
 

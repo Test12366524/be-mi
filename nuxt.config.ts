@@ -7,7 +7,7 @@ import svgLoader from "vite-svg-loader";
 export default defineNuxtConfig({
   app: {
     head: {
-      title: "SIAKAD PKU",
+      title: "PKU MUI Jakarta",
       link: [
         {
           rel: "icon",

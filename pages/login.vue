@@ -93,10 +93,10 @@ const onSubmit = () => {
     >
       <VCard flat :width="500" class="mt-12 mt-sm-0 pa-5 pa-lg-7">
         <VCardText class="text-center">
-          <img :src="imgLogo" style="width: 100%" />
+          <img :src="imgLogo" style="width: 80%" />
         </VCardText>
         <VCardText>
-          <h4 class="text-h4 mb-1 text-center">SIAKAD PKU</h4>
+          <h4 class="text-h4 mb-1 text-center">PKU MUI Jakarta</h4>
           <p class="mb-0 text-center">Silahkan login menggunakan akun anda</p>
         </VCardText>
 

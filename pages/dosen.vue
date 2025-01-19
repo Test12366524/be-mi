@@ -16,7 +16,6 @@ const form = {
   email: "",
   phone: "",
   join_date: "",
-  pendidikan_terakhir: "",
   address: "",
   photo: null,
 };
@@ -254,6 +253,9 @@ onMounted(() => {
                   payload.birth_date = formatFullDate(
                     payload.birth_date
                   ).simpleDate;
+                  payload.join_date = formatFullDate(
+                    payload.join_date
+                  ).simpleDate;
                   if (payload.photo) previewPhoto = getFileUrl(payload.photo);
                   dialogSave.show(payload, true);
                 }
@@ -268,6 +270,9 @@ onMounted(() => {
                   const payload = { ...item };
                   payload.birth_date = formatFullDate(
                     payload.birth_date
+                  ).simpleDate;
+                  payload.join_date = formatFullDate(
+                    payload.join_date
                   ).simpleDate;
                   if (payload.photo) previewPhoto = getFileUrl(payload.photo);
                   dialogSave.show(payload);
